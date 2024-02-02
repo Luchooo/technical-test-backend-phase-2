@@ -1,5 +1,5 @@
 {
-  "name": "nodejs-typescript-setup",
+  "name": "technical-test-backend-phase-2",
   "version": "1.0.0",
   "description": "Setup to NodeJs projects",
   "main": "index.js",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Luchooo/nodejs-typescript-setup.git"
+    "url": "git+https://github.com/Luchooo/technical-test-backend-phase-2.git"
   },
   "author": "Luis Sanchez",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Luchooo/nodejs-typescript-setup/issues"
+    "url": "https://github.com/Luchooo/technical-test-backend-phase-2/issues"
   },
-  "homepage": "https://github.com/Luchooo/nodejs-typescript-setup#readme",
+  "homepage": "https://github.com/Luchooo/technical-test-backend-phase-2#readme",
   "engines": {
     "node": "20.11.0"
   },
