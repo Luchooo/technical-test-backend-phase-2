@@ -4,10 +4,10 @@ import { prisma } from '@utils/prismaClient'
 
 const saltRounds = 10
 
-const exclude = <User, Key extends keyof User>(
+const exclude = async <User, Key extends keyof User>(
   user: User,
   keys: Key[]
-): Omit<User, Key> =>
+): Promise<Omit<User, Key>> =>
   Object.fromEntries(
     Object.entries(Boolean(user) || {}).filter(
       ([key]) => !keys.includes(key as Key)
@@ -17,15 +17,14 @@ const exclude = <User, Key extends keyof User>(
 export const userModel = {
   create: async ({ input }: { input: CreateUser }): Promise<UserCreated> => {
     const passwordHash = await bcrypt.hash(input.password, saltRounds)
-    const userForDB = exclude(input, ['password'])
+    const userForDB = await exclude(input, ['password'])
     const newUser = await prisma.users.create({
       data: {
         ...userForDB,
         passwordHash
       }
     })
-    const userWithoutPassword = exclude(newUser, ['passwordHash'])
-    return userWithoutPassword
+    return await exclude(newUser, ['passwordHash'])
   },
 
   getAll: async (): Promise<UserCreated[]> => {

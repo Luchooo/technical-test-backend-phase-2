@@ -1,12 +1,11 @@
 generator client {
     provider        = "prisma-client-js"
-    output          = "./generated/test-client"
     previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
     provider   = "postgresql"
-    url        = env("DATABASE_URL")
+    url        = env("DATABASE_URL_TEST")
     extensions = [uuidOssp(map: "uuid-ossp")]
 }
 
@@ -17,7 +16,6 @@ model Videos {
     url         String
     createdAt   DateTime @default(now())
     isPublic    Boolean
-    text        String
 }
 
 model Users {

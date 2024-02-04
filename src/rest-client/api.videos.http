@@ -15,7 +15,7 @@ POST http://localhost:3000/api/videos
 Content-Type: application/json
 
 {
-  "title": "HTTP cat",
+  "title": "HTTP cat 22",
   "description": "video from http extension",
   "url": "https://www.youtube.com/shorts/lrajbjOPWjo",
   "isPublic": true
@@ -30,6 +30,6 @@ PUT http://localhost:3000/api/videos/879916e3-76f2-438f-b987-8a7bcae45963
 Content-Type: application/json
 
 {
-  "title": "Lola2",
+  "title": "Lola 🍍",
   "description": "video from http extension"
 }
