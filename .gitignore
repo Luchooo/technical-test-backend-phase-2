@@ -1,3 +1,7 @@
 node_modules
 build
-.env
+.env.dev
+.env.test
+prisma/db/migrations
+prisma/db-test/migrations
+prisma/db-test/generated

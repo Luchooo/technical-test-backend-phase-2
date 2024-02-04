@@ -1,19 +1,20 @@
 import cors from 'cors'
 import express, { json } from 'express'
 import morgan from 'morgan'
-import 'dotenv/config'
-import { type VideoModel } from '@my-types/'
+import { type Models } from '@my-types/'
 import { createVideosRouter } from '@routes/videos.routes'
+import { createUsersRouter } from '@routes/users.routes'
 import { print } from '@config/logger'
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const createApp = (videoModel: VideoModel) => {
+export const createApp = ({ videoModel, userModel }: Models) => {
   const app = express()
   app.use(cors())
   app.use(morgan('dev'))
   app.use(json())
   app.disable('x-powered-by')
 
+  app.use('/api/users/', createUsersRouter(userModel))
   app.use('/api/videos/', createVideosRouter(videoModel))
 
   app.use(function (_req, res) {
