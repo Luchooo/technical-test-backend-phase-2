@@ -5,7 +5,7 @@ export interface Video {
   title: string
   description: string
   url: string
-  createdAt: number
+  createdAt: Date
   isPublic: boolean
 }
 

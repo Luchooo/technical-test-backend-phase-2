@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto'
 import { type UpdateVideo, type CreateVideo, type Video } from '@my-types/'
-import videosData from './videos.json'
-const videos = videosData as Video[]
+import { videos } from './videos.mock'
 
 const getPublicVideos = (videos: Video[]): Video[] => {
   return videos.filter((video) => video.isPublic)
@@ -26,7 +25,7 @@ export const videoModel = {
     const newVideo: Video = {
       ...input,
       id: randomUUID(),
-      createdAt: new Date().getTime()
+      createdAt: new Date()
     }
 
     videos.push(newVideo)
