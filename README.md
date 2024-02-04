@@ -99,7 +99,7 @@ npm run dev
   </li>
 
   <li>
-    <details open>
+    <details>
       <summary>Actores que intervienen en el proceso 🧍</summary>
 
   👉 En una aplicación de gestión de vídeos, veo dos actores o stakeholders involucrados, cada uno con roles y responsabilidades específicos. Los principales actores son:

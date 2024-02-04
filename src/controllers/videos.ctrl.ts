@@ -36,7 +36,6 @@ export const videoController = (videoModel: VideoModel): VideoController => {
     create: async (req: Request, res: Response) => {
       try {
         const result = await validateVideo(req.body)
-
         if (!result.success) throw new Error(result.error.message)
         const newVideo = await videoModel.create({ input: result.data })
         res.json(newVideo)
