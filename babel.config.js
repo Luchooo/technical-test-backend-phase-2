@@ -15,7 +15,10 @@ module.exports = {
         'module-resolver',
         {
           alias: {
+            '@my-types': './src/types.d.ts',
+            '@models': './src/models',
             '@utils': './src/utils',
+            '@schemas': './src/schemas',
             '@config': './src/config',
             '@controllers': './src/controllers',
             '@routes': './src/routes'

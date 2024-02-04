@@ -1,26 +1,30 @@
-import { print } from '@config/logger'
-import { emojisrouter } from '@routes/index.routes'
-import express from 'express'
+import cors from 'cors'
+import express, { json } from 'express'
 import morgan from 'morgan'
+import 'dotenv/config'
+import { type VideoModel } from '@my-types/'
+import { createVideosRouter } from '@routes/videos.routes'
+import { print } from '@config/logger'
 
-const app = express()
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const createApp = (videoModel: VideoModel) => {
+  const app = express()
+  app.use(cors())
+  app.use(morgan('dev'))
+  app.use(json())
+  app.disable('x-powered-by')
 
-app.use(morgan('dev'))
+  app.use('/api/videos/', createVideosRouter(videoModel))
 
-app.get('/', (_req, res) => {
-  res.send('Hello Luis')
-})
+  app.use(function (_req, res) {
+    res.status(404).send('Sorry cant find that!')
+  })
 
-app.use('/api/emojis', emojisrouter)
+  const PORT = process.env.PORT != null || 3000
 
-app.use(function (_req, res) {
-  res.status(404).send('Sorry cant find that!')
-})
+  const server = app.listen(PORT, () => {
+    print.info(`Server running on: http://localhost:${PORT}`)
+  })
 
-const PORT = process.env.PORT != null || 3000
-
-app.listen(PORT, () => {
-  print.info(`Server running on: http://localhost:${PORT}`)
-})
-
-export default app
+  return { app, server }
+}
