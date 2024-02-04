@@ -1,0 +1,10 @@
+### Create a new video
+POST http://localhost:3000/api/users
+Content-Type: application/json
+
+{
+  "username": "luchooo",
+  "email": "luis@mail.com",
+  "password": "12345678",
+  "avatarUrl": "https://nobita.me/data/resource_icons/0/86.jpg"
+}

@@ -6,8 +6,10 @@ export const handleError = async (
   try {
     let errorMsg = 'Unknow error'
     if (e instanceof Error) errorMsg = e.message
+    console.error(errorMsg)
     res.status(400).json({ error: errorMsg })
   } catch (error) {
+    console.error(error)
     res.status(500).json({ error })
   }
 }

@@ -17,3 +17,11 @@ model Videos {
   createdAt   DateTime @default(now())
   isPublic    Boolean
 }
+
+model Users {
+  id           String @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  username     String @unique
+  email        String @unique
+  passwordHash String
+  avatarUrl    String
+}
