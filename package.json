@@ -13,10 +13,11 @@
     "typecheck": "tsc --noEmit",
     "test": "dotenv -e .env.test -- jest src/test/api.videos.test.ts --silent --detectOpenHandles",
     "test:watch": "npm run test -- --watch",
-    "db:migrate": "dotenv -e .env.dev -- npx prisma migrate dev --schema ./prisma/db/schema.prisma",
-    "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --schema ./prisma/db-test/schema-test.prisma",
-    "db:studio": "npx prisma studio --schema ./prisma/db/schema.prisma",
-    "db:studio:test": "npx prisma studio --schema ./prisma/db-test/schema-test.prisma"
+    "db:migrate": "dotenv -e .env.dev -- npx prisma migrate dev --schema ./src/prisma/db/schema.prisma",
+    "db:seed": "dotenv -e .env.dev tsx ./src/prisma/db/seed.ts",
+    "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --schema ./src/prisma/db-test/schema-test.prisma",
+    "db:studio": "dotenv -e .env.dev -- npx prisma studio --schema ./src/prisma/db/schema.prisma",
+    "db:studio:test": "dotenv -e .env.test -- npx prisma studio --schema ./src/prisma/db-test/schema-test.prisma"
   },
   "repository": {
     "type": "git",
