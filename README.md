@@ -65,3 +65,63 @@ npm run dev
 | ⚙️  | `test`           | Run test.                                     |
                    
 </details>
+
+
+## 🧠 Technical test phase final
+
+<ol>
+  <li>
+    <details>
+      <summary>Información obtenida</summary>
+
+  - Sólo los usuarios registrados pueden subir vídeos.
+  - Cualquier usuario puede comentar o dar like sobre un vídeo.
+  - Si el video es público cualquier usuario podra verlo, si el  video es privado solo los usuarios registrados pueden verlo
+  - Atributos de video
+    - ID
+    - Title
+    - Description
+    - Url
+    - Fecha de creación
+    - Visibilidad (Público|Privado).
+  - Atributos comentario
+    - ID
+    - Description
+    - Fecha de creación
+  - Usuario registrado (***Stakeholder***)
+    - ID
+    - Name
+    - Email
+    - Password  
+    - Avatar
+  - Usuario no registrado (***Stakeholder***)
+    </details>
+  </li>
+
+  <li>
+    <details open>
+      <summary>Actores que intervienen en el proceso 🧍</summary>
+
+  👉 En una aplicación de gestión de vídeos, veo dos actores o stakeholders involucrados, cada uno con roles y responsabilidades específicos. Los principales actores son:
+
+  - Usuario Registrado:
+    - Descripción: Un usuario que ha creado una cuenta en la aplicación.
+    - Responsabilidades:
+      - Puede subir vídeos.
+      - Puede gestionar vídeos.
+      - Puede comentar en vídeos.
+      - Puede dar likes a vídeos.
+      - Puede gestionar su perfil.
+  - Usuario No Registrado:
+    - Descripción: Un visitante de la aplicación que aún no ha creado una cuenta.
+    - Responsabilidades:
+      - Puede ver vídeos públicos.
+      - Puede comentar en vídeos.
+      - Puede dar likes a vídeos.
+      - Puede registrarse para obtener una cuenta
+
+  👉 Diagrama de uso: Obtener videos
+    </details>
+  </li>
+<ol>
+                   

@@ -4,13 +4,14 @@
   "description": "Setup to NodeJs projects",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx --watch --no-warnings src/index.ts",
-    "start": "node build/index.js",
+    "dev:local": "tsx --watch --no-warnings src/server-with-local.ts",
+    "start:local": "node build/server-with-local.js",
     "build": "babel src --extensions \".ts,.js\" --out-dir build --copy-files",
     "fm": "prettier --write src",
     "lint": "eslint --fix src --ext .js,.jsx,.ts,.tsx",
     "typecheck": "tsc --noEmit",
-    "test": "jest --watch"
+    "test": "jest --detectOpenHandles",
+    "test:watch": "npm run test -- --watch"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,7 @@
     "@babel/node": "^7.23.9",
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-typescript": "^7.23.3",
+    "@types/cors": "2.8.17",
     "@types/express": "4.17.21",
     "@types/jest": "29.5.12",
     "@types/morgan": "1.9.9",
@@ -52,8 +54,11 @@
     "typescript": "5.3.3"
   },
   "dependencies": {
+    "cors": "2.8.5",
+    "dotenv": "16.4.1",
     "express": "4.18.2",
     "morgan": "1.10.0",
-    "winston": "3.11.0"
+    "winston": "3.11.0",
+    "zod": "3.22.4"
   }
 }
