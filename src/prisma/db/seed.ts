@@ -1,10 +1,9 @@
-import { PrismaClient } from '@prisma/client'
-import { videos } from '@models/local-file-system/videos/videos.mock'
+import { prisma } from '@utils/prismaClient'
+import { videos } from './videos.mock'
 import { print } from '@config/logger'
+import { type Video } from '@my-types/*'
 
-const prisma = new PrismaClient()
-
-const main = async (): Promise<void> => {
+const main = async (videos: Video[]): Promise<void> => {
   try {
     for (const videoData of videos) {
       await prisma.videos.upsert({
@@ -27,7 +26,7 @@ const main = async (): Promise<void> => {
   }
 }
 
-main()
+main(videos)
   .then(async () => {
     await prisma.$disconnect()
   })

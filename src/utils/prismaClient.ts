@@ -1,5 +1,10 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaClient as PrismaClientTest } from '../../prisma/db-test/generated/test-client'
 
-export const prisma =
-  process.env.NODE_ENV === 'test' ? new PrismaClientTest() : new PrismaClient()
+const datasourceUrl =
+  process.env.NODE_ENV === 'test'
+    ? process.env.DATABASE_URL_TEST
+    : process.env.DATABASE_URL
+
+export const prisma = new PrismaClient({
+  datasourceUrl
+})

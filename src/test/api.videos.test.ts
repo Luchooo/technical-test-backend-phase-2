@@ -1,55 +1,43 @@
+import { randomUUID } from 'node:crypto'
 import request from 'supertest'
-import { app, server } from '../server-with-local'
-import { Video } from '@my-types/*'
+import { app, server } from '../server-with-postgres'
+import { prisma } from '@utils/prismaClient'
+import { getPublicVideos, initialVideos } from './helper'
+import { type Video } from '@my-types/*'
 
-afterAll(() => {
+afterAll(async () => {
   server.close()
+  await prisma.$disconnect()
+})
+
+beforeEach(async () => {
+  await prisma.videos.deleteMany({})
+  await prisma.videos.createMany({
+    data: initialVideos
+  })
 })
 
 describe('GET /api/videos/public', () => {
   it('responds with a json message', async () => {
-    await request(app)
+    const res = await request(app)
       .get('/api/videos/public')
-      .set('Accept', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
-  })
-
-  it('there are two videos public', async () => {
-    const response = await request(app).get('/api/videos/public')
-    expect(response.body).toHaveLength(2)
+    expect(res.body).toHaveLength(getPublicVideos(res.body).length)
   })
 
   it('find video about cat Video Maria', async () => {
-    const response = await request(app).get('/api/videos/public')
-    const videos = response.body.map((video: Video) => video.title)
-    expect(videos).toContain('Dog video maria public')
-  })
-})
-
-describe('GET /api/videos', () => {
-  it('get a single video', async () => {
-    await request(app)
-      .get('/api/videos/879916e3-76f2-438f-b987-8a7bcae45963')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
-  })
-
-  it('get a single video', async () => {
-    await request(app)
-      .get('/api/videos/id-fail')
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(400)
+    const res = await request(app).get('/api/videos/public')
+    const videos = res.body.map((video: Video) => video.title)
+    expect(videos).toContain('Test dog video maria public')
   })
 })
 
 describe('POST /api/videos', () => {
   it('create a video responds with json', async () => {
     const newVideo = {
-      title: 'HTTP cat',
-      description: 'video from http extension',
+      title: 'HTTP cat 🍰',
+      description: '🎢 video from http extension',
       url: 'https://www.youtube.com/shorts/lrajbjOPWjo',
       isPublic: true
     }
@@ -57,10 +45,12 @@ describe('POST /api/videos', () => {
       .post('/api/videos')
       .send(newVideo)
       .expect('Content-Type', /json/)
-      .expect(200)
+      .expect(201)
 
-    const response = await request(app).get('/api/videos/public')
-    expect(response.body).toHaveLength(3)
+    const res = await request(app).get('/api/videos/public')
+    const videos = res.body.map((video: Video) => video.title)
+    expect(videos).toContain(newVideo.title)
+    expect(res.body).toHaveLength(getPublicVideos(res.body).length)
   })
 
   it('failed to create a new video missing properties', async () => {
@@ -75,54 +65,87 @@ describe('POST /api/videos', () => {
   })
 })
 
+describe('GET /api/videos', () => {
+  it('get a single video', async () => {
+    const res = await request(app).get('/api/videos/public')
+    const { id } = res.body[0]
+
+    await request(app)
+      .get(`/api/videos/${id}`)
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+  })
+
+  it('get a single video', async () => {
+    const id = randomUUID()
+    const res = await request(app)
+      .get(`/api/videos/${id}`)
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400)
+
+    expect(res.body.error).toMatch(/video not found/i)
+  })
+})
+
 describe('PUT /api/videos', () => {
   it('update a video', async () => {
+    const res = await request(app).get('/api/videos/public')
+    const { id } = res.body[0]
+
     const updateVideo = {
-      title: 'Title from test',
-      description: 'video from tests'
+      title: 'Title from test jest',
+      description: 'video from tests jest'
     }
     await request(app)
-      .put('/api/videos/879916e3-76f2-438f-b987-8a7bcae45963')
+      .put(`/api/videos/${id}`)
       .send(updateVideo)
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
 
-    const res = await request(app).get(
-      '/api/videos/879916e3-76f2-438f-b987-8a7bcae45963'
-    )
-
-    expect(res.body.title).toEqual('Title from test')
-    expect(res.body.description).toEqual('video from tests')
+    const res2 = await request(app).get(`/api/videos/${id}`)
+    expect(res2.body.title).toEqual(updateVideo.title)
+    expect(res2.body.description).toEqual(updateVideo.description)
   })
 
-  it('update a unknow video', async () => {
+  it('update a video with random id', async () => {
+    const id = randomUUID()
     await request(app)
-      .put('/api/videos/unknow')
+      .put(`/api/videos/${id}`)
       .send({})
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
       .then((response) => {
-        expect(response.body.error).toMatch(/video not found/i)
+        expect(response.body.error).toMatch(/record to update not found/i)
       })
   })
 })
 
 describe('DELETE /api/videos', () => {
   it('delete a video', async () => {
-    const res = await request(app).delete(
-      '/api/videos/879916e3-76f2-438f-b987-8a7bcae45963'
-    )
-    expect(res.status).toEqual(200)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body['message']).toMatch(/video deleted/i)
+    const res = await request(app).get('/api/videos/public')
+    const { id } = res.body[0]
+
+    await request(app)
+      .delete(`/api/videos/${id}`)
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .then((res) => {
+        expect(res.body.message).toMatch(/video deleted/i)
+      })
   })
 
-  it('delete a unknow video', async () => {
-    const res = await request(app).delete('/api/videos/unknow')
-    expect(res.status).toEqual(400)
-    expect(res.headers['content-type']).toMatch(/json/)
-    expect(res.body['error']).toMatch(/video not found/i)
+  it('delete a video with random id', async () => {
+    const id = randomUUID()
+    await request(app)
+      .delete(`/api/videos/${id}`)
+      .expect(400)
+      .expect('Content-Type', /json/)
+      .then((res) => {
+        expect(res.body.error).toMatch(/record to delete does not exist/i)
+      })
   })
 })

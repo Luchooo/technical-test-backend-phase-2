@@ -38,7 +38,7 @@ export const videoController = (videoModel: VideoModel): VideoController => {
         const result = await validateVideo(req.body)
         if (!result.success) throw new Error(result.error.message)
         const newVideo = await videoModel.create({ input: result.data })
-        res.json(newVideo)
+        res.status(201).json(newVideo)
       } catch (e) {
         await handleError(res, e)
       }
