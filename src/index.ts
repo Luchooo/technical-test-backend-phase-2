@@ -21,7 +21,7 @@ export const createApp = ({ videoModel, userModel }: Models) => {
     res.status(404).send('Sorry cant find that!')
   })
 
-  const PORT = process.env.PORT != null || 3000
+  const PORT = process.env.PORT ?? 3000
 
   const server = app.listen(PORT, () => {
     print.info(`Server running on: http://localhost:${PORT}`)

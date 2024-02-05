@@ -8,6 +8,5 @@ export const createUsersRouter = (usersModel: UserModel): Router => {
   const userCtrl = userController(usersModel)
 
   usersRouter.post('/', userCtrl.create)
-  usersRouter.get('/', userCtrl.getAll)
   return usersRouter
 }

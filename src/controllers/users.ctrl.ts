@@ -1,27 +1,24 @@
-import { type Request, type Response } from 'express'
 import { type UserModel, type UserController } from '@my-types/*'
-import { handleError } from '@utils/errorHandler'
 import { validateUser } from '@schemas/users'
+import { handleError } from '@utils/errorHandler'
+import { Prisma } from '@utils/prismaClient'
 
 export const userController = (userModel: UserModel): UserController => {
   return {
-    create: async (req: Request, res: Response) => {
+    create: async (req, res) => {
       try {
         const result = await validateUser(req.body)
         if (!result.success) throw new Error(result.error.message)
         const newUser = await userModel.create({ input: result.data })
-        res.json(newUser)
+        res.status(201).json(newUser)
       } catch (e) {
-        await handleError(res, e)
-      }
-    },
-
-    getAll: async (_req: Request, res: Response) => {
-      try {
-        const users = await userModel.getAll()
-        res.json(users)
-      } catch (e) {
-        await handleError(res, e)
+        if (e instanceof Prisma.PrismaClientKnownRequestError) {
+          if (e.code === 'P2002') {
+            res.status(400).json({ error: 'email or username already taken' })
+          }
+        } else {
+          await handleError(res, e)
+        }
       }
     }
   }

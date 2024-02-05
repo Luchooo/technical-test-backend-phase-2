@@ -1,9 +1,9 @@
 import { type UpdateVideo, type CreateVideo, type Video } from '@my-types/'
-import { prisma } from '@utils/prismaClient'
+import { usePrisma } from '@utils/prismaClient'
 
 export const videoModel = {
   getAllPublic: async (): Promise<Video[]> => {
-    const videos = await prisma.videos.findMany({
+    const videos = await usePrisma.videos.findMany({
       where: {
         isPublic: true
       }
@@ -12,12 +12,12 @@ export const videoModel = {
   },
 
   getAll: async (): Promise<Video[]> => {
-    const videos = await prisma.videos.findMany()
+    const videos = await usePrisma.videos.findMany()
     return videos
   },
 
   getById: async ({ id }: { id: string }): Promise<Video> => {
-    const video = await prisma.videos.findUnique({
+    const video = await usePrisma.videos.findUnique({
       where: {
         id
       }
@@ -28,14 +28,14 @@ export const videoModel = {
   },
 
   create: async ({ input }: { input: CreateVideo }): Promise<Video> => {
-    const newVideo = await prisma.videos.create({
+    const newVideo = await usePrisma.videos.create({
       data: input
     })
     return newVideo
   },
 
   delete: async ({ id }: { id: string }): Promise<void> => {
-    await prisma.videos.delete({
+    await usePrisma.videos.delete({
       where: {
         id
       }
@@ -43,7 +43,7 @@ export const videoModel = {
   },
 
   update: async ({ id, input }: UpdateVideo): Promise<Video> => {
-    const updatedVideo = await prisma.videos.update({
+    const updatedVideo = await usePrisma.videos.update({
       where: {
         id
       },

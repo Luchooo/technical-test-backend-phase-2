@@ -1,18 +1,18 @@
 import { randomUUID } from 'node:crypto'
 import request from 'supertest'
 import { app, server } from '../server-with-postgres'
-import { prisma } from '@utils/prismaClient'
-import { getPublicVideos, initialVideos } from './helper'
+import { usePrisma } from '@utils/prismaClient'
+import { getPublicVideos, initialVideos } from './helper.videos'
 import { type Video } from '@my-types/*'
 
 afterAll(async () => {
   server.close()
-  await prisma.$disconnect()
+  await usePrisma.$disconnect()
 })
 
 beforeEach(async () => {
-  await prisma.videos.deleteMany({})
-  await prisma.videos.createMany({
+  await usePrisma.videos.deleteMany({})
+  await usePrisma.videos.createMany({
     data: initialVideos
   })
 })
