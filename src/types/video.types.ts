@@ -1,5 +1,4 @@
 import type { NextFunction, Request, Response } from 'express'
-import type { AuthedRequest } from '../types'
 
 export interface Video {
   id: string
@@ -23,19 +22,13 @@ export type RequestHandler = (
   next: NextFunction
 ) => Promise<void>
 
-export type RequestHandlerAuth = (
-  req: AuthedRequest,
-  res: Response,
-  next: NextFunction
-) => Promise<void>
-
 export interface VideoController {
   getAllPublic: RequestHandler
-  getAll: RequestHandlerAuth
-  getById: RequestHandlerAuth
-  create: RequestHandlerAuth
-  delete: RequestHandlerAuth
-  update: RequestHandlerAuth
+  getAll: RequestHandler
+  getById: RequestHandler
+  create: RequestHandler
+  delete: RequestHandler
+  update: RequestHandler
 }
 
 export interface VideoModel {
