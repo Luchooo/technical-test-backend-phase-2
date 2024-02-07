@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import express, { type Router } from 'express'
-import { userController } from '@controllers/users.ctrl'
+import { Router } from 'express'
 import { type UserModel } from '@my-types/*'
+import { userController } from '@controllers/users.ctrl'
 
-export const createUsersRouter = (usersModel: UserModel): Router => {
-  const usersRouter = express.Router()
+export const usersRouter = (usersModel: UserModel): Router => {
+  const usersRouter = Router()
   const userCtrl = userController(usersModel)
 
   usersRouter.post('/', userCtrl.create)

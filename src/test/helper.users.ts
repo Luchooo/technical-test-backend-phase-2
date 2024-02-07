@@ -1,11 +1,11 @@
-import { type CreateUser, type UserDB } from '@my-types/*'
+import { type UserPayload, type UserDB } from '@my-types/*'
 import { usePrisma } from '@utils/prismaClient'
 
 export const getUsers = async (): Promise<UserDB[]> => {
   return await usePrisma.users.findMany({})
 }
 
-export const newUser: CreateUser = {
+export const newUser: UserPayload = {
   username: 'maria123',
   email: 'maria123@gmail.com',
   password: 'root123',

@@ -1,25 +1,29 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+
 import cors from 'cors'
 import express, { json } from 'express'
 import morgan from 'morgan'
-import { type Models } from '@my-types/'
-import { createVideosRouter } from '@routes/videos.routes'
-import { createUsersRouter } from '@routes/users.routes'
+import { videosRouter, usersRouter, authRouter } from '@routes/index.routes'
+import { handleAppError } from './middleware/handle-app-error.middleware'
 import { print } from '@config/logger'
+import type { Models } from '@my-types/'
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const createApp = ({ videoModel, userModel }: Models) => {
+export const createApp = ({ authModel, userModel, videoModel }: Models) => {
   const app = express()
   app.use(cors())
   app.use(morgan('dev'))
   app.use(json())
   app.disable('x-powered-by')
 
-  app.use('/api/users/', createUsersRouter(userModel))
-  app.use('/api/videos/', createVideosRouter(videoModel))
+  app.use('/api/users/', usersRouter(userModel))
+  app.use('/api/videos/', videosRouter(videoModel))
+  app.use('/api/auth/', authRouter(authModel))
 
-  app.use(function (_req, res) {
+  app.use('/*', function (_req, res) {
     res.status(404).send('Sorry cant find that!')
   })
+
+  app.use(handleAppError)
 
   const PORT = process.env.PORT ?? 3000
 

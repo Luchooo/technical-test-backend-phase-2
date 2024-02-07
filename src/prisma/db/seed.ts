@@ -1,14 +1,15 @@
 import { usePrisma } from '@utils/prismaClient'
-import { type VideoSeed, videos } from './videos.mock'
+import { videos } from './videos.mock'
 import { users } from './users.mock'
 import { print } from '@config/logger'
-import { type User } from '@my-types/*'
+import type { Video, User } from '@my-types/*'
+import { hashPassword } from '@utils/hashPassword'
 
-const main = async ({
+export const initializeDB = async ({
   videos,
   users
 }: {
-  videos: VideoSeed[]
+  videos: Video[]
   users: User[]
 }): Promise<void> => {
   try {
@@ -20,7 +21,7 @@ const main = async ({
           id: user.id,
           username: user.username,
           email: user.email,
-          passwordHash: user.password,
+          passwordHash: await hashPassword(user.password),
           avatarUrl: user.avatarUrl
         }
       })
@@ -49,7 +50,7 @@ const main = async ({
   }
 }
 
-main({ videos, users })
+initializeDB({ videos, users })
   .then(async () => {
     await usePrisma.$disconnect()
   })

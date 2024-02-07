@@ -1,5 +1,5 @@
-import { type VideoSeed } from '@my-types/'
-export const videos: VideoSeed[] = [
+import type { Video } from '@my-types/'
+export const videos: Video[] = [
   {
     id: '1ffa137b-931d-4c0f-b3fb-69cc83107ef1',
     title: 'Cat Video',

@@ -1,70 +1,79 @@
-import { type Request, type Response } from 'express'
-import { type VideoModel, type VideoController } from '@my-types/*'
-import { handleError } from '@utils/errorHandler'
-import { validatePartialVideo, validateVideo } from '@schemas/videos'
+import type {
+  VideoModel,
+  VideoController,
+  VideoCreatePayload,
+  VideoUpdatePayload
+} from '@my-types/*'
+import { schemaCreateVideo } from '@schemas/video-create'
+import { schemaUpdateVideo } from '@schemas/video-update'
+import { validatePayload } from '@utils/validate-schema'
 
 export const videoController = (videoModel: VideoModel): VideoController => {
   return {
-    getAllPublic: async (_req: Request, res: Response) => {
+    getAllPublic: async (_req, res, next) => {
       try {
         const videosPublic = await videoModel.getAllPublic()
         res.json(videosPublic)
       } catch (e) {
-        await handleError(res, e)
+        next(e)
       }
     },
 
-    getAll: async (_req: Request, res: Response) => {
+    getAll: async (_req, res, next) => {
       try {
         const videos = await videoModel.getAll()
         res.json(videos)
       } catch (e) {
-        await handleError(res, e)
+        next(e)
       }
     },
 
-    getById: async (req: Request, res: Response) => {
+    getById: async (req, res, next) => {
       try {
         const { id } = req.params
         const video = await videoModel.getById({ id })
         res.json(video)
       } catch (e) {
-        await handleError(res, e)
+        next(e)
       }
     },
 
-    create: async (req: Request, res: Response) => {
+    create: async (req, res, next) => {
       try {
-        const result = await validateVideo(req.body)
-        if (!result.success) throw new Error(result.error.message)
-        const newVideo = await videoModel.create({ input: result.data })
+        const userId = req.user.id
+        const payload = await validatePayload<VideoCreatePayload>(
+          schemaCreateVideo,
+          req.body
+        )
+        const newVideo = await videoModel.create({ payload, userId })
         res.status(201).json(newVideo)
       } catch (e) {
-        await handleError(res, e)
+        next(e)
       }
     },
 
-    delete: async (req: Request, res: Response) => {
+    delete: async (req, res, next) => {
       try {
         const { id } = req.params
         await videoModel.delete({ id })
         res.json({ message: 'Video deleted successfully' })
       } catch (e) {
-        await handleError(res, e)
+        next(e)
       }
     },
 
-    update: async (req: Request, res: Response) => {
+    update: async (req, res, next) => {
       try {
-        const result = await validatePartialVideo(req.body)
-
-        if (!result.success) throw new Error(result.error.message)
-
         const { id } = req.params
-        const updatedVideo = await videoModel.update({ id, input: result.data })
+        const userId = req.user.id
+        const payload = await validatePayload<VideoUpdatePayload>(
+          schemaUpdateVideo,
+          req.body
+        )
+        const updatedVideo = await videoModel.update({ id, userId, payload })
         res.json(updatedVideo)
       } catch (e) {
-        await handleError(res, e)
+        next(e)
       }
     }
   }
