@@ -1,10 +1,12 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 
 const datasourceUrl =
   process.env.NODE_ENV === 'test'
     ? process.env.DATABASE_URL_TEST
     : process.env.DATABASE_URL
 
-export const prisma = new PrismaClient({
+const usePrisma = new PrismaClient({
   datasourceUrl
 })
+
+export { Prisma, usePrisma }

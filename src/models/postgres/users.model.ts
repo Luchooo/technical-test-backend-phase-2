@@ -1,34 +1,42 @@
-import bcrypt from 'bcrypt'
-import { type UserCreated, type CreateUser } from '@my-types/'
-import { prisma } from '@utils/prismaClient'
+import { usePrisma } from '@utils/prismaClient'
+import type { UserCreated, UserPayload } from '@my-types/'
+import { hashPassword } from '@utils/hashPassword'
+import ErrorKnow from '@utils/errorKnow'
 
-const saltRounds = 10
+const selectdFields = {
+  avatarUrl: true,
+  email: true,
+  id: true,
+  username: true
+}
 
-const exclude = async <User, Key extends keyof User>(
-  user: User,
-  keys: Key[]
-): Promise<Omit<User, Key>> =>
-  Object.fromEntries(
-    Object.entries(Boolean(user) || {}).filter(
-      ([key]) => !keys.includes(key as Key)
-    )
-  ) as Omit<User, Key>
+const getUserById = async (id: string): Promise<UserCreated> => {
+  const userCreated = await usePrisma.users.findUnique({
+    where: { id },
+    select: selectdFields
+  })
+
+  if (userCreated === null) throw new ErrorKnow('Error getting user created')
+  return userCreated
+}
 
 export const userModel = {
-  create: async ({ input }: { input: CreateUser }): Promise<UserCreated> => {
-    const passwordHash = await bcrypt.hash(input.password, saltRounds)
-    const userForDB = await exclude(input, ['password'])
-    const newUser = await prisma.users.create({
+  create: async ({
+    payload
+  }: {
+    payload: UserPayload
+  }): Promise<UserCreated> => {
+    const { avatarUrl, email, password, username } = payload
+    const passwordHash = await hashPassword(password)
+
+    const newUser = await usePrisma.users.create({
       data: {
-        ...userForDB,
-        passwordHash
+        username,
+        passwordHash,
+        email,
+        avatarUrl
       }
     })
-    return await exclude(newUser, ['passwordHash'])
-  },
-
-  getAll: async (): Promise<UserCreated[]> => {
-    const users = await prisma.users.findMany()
-    return users
+    return await getUserById(newUser.id)
   }
 }

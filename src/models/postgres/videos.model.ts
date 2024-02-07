@@ -1,9 +1,9 @@
-import { type UpdateVideo, type CreateVideo, type Video } from '@my-types/'
-import { prisma } from '@utils/prismaClient'
+import type { VideoModel } from '@my-types/'
+import { usePrisma } from '@utils/prismaClient'
 
-export const videoModel = {
-  getAllPublic: async (): Promise<Video[]> => {
-    const videos = await prisma.videos.findMany({
+export const videoModel: VideoModel = {
+  getAllPublic: async () => {
+    const videos = await usePrisma.videos.findMany({
       where: {
         isPublic: true
       }
@@ -11,13 +11,13 @@ export const videoModel = {
     return videos
   },
 
-  getAll: async (): Promise<Video[]> => {
-    const videos = await prisma.videos.findMany()
+  getAll: async () => {
+    const videos = await usePrisma.videos.findMany()
     return videos
   },
 
-  getById: async ({ id }: { id: string }): Promise<Video> => {
-    const video = await prisma.videos.findUnique({
+  getById: async ({ id }) => {
+    const video = await usePrisma.videos.findUnique({
       where: {
         id
       }
@@ -27,27 +27,28 @@ export const videoModel = {
     return video
   },
 
-  create: async ({ input }: { input: CreateVideo }): Promise<Video> => {
-    const newVideo = await prisma.videos.create({
-      data: input
+  create: async ({ payload, userId }) => {
+    const newVideo = await usePrisma.videos.create({
+      data: { ...payload, usersId: userId }
     })
     return newVideo
   },
 
-  delete: async ({ id }: { id: string }): Promise<void> => {
-    await prisma.videos.delete({
+  delete: async ({ id }) => {
+    await usePrisma.videos.delete({
       where: {
         id
       }
     })
   },
 
-  update: async ({ id, input }: UpdateVideo): Promise<Video> => {
-    const updatedVideo = await prisma.videos.update({
+  update: async ({ id, userId, payload }) => {
+    const updatedVideo = await usePrisma.videos.update({
       where: {
-        id
+        id,
+        usersId: userId
       },
-      data: input
+      data: payload
     })
     return updatedVideo
   }

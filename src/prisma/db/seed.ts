@@ -1,12 +1,35 @@
-import { prisma } from '@utils/prismaClient'
+import { usePrisma } from '@utils/prismaClient'
 import { videos } from './videos.mock'
+import { users } from './users.mock'
 import { print } from '@config/logger'
-import { type Video } from '@my-types/*'
+import type { Video, User } from '@my-types/*'
+import { hashPassword } from '@utils/hashPassword'
 
-const main = async (videos: Video[]): Promise<void> => {
+export const initializeDB = async ({
+  videos,
+  users
+}: {
+  videos: Video[]
+  users: User[]
+}): Promise<void> => {
   try {
+    for (const user of users) {
+      await usePrisma.users.upsert({
+        where: { id: user.id },
+        update: {},
+        create: {
+          id: user.id,
+          username: user.username,
+          email: user.email,
+          passwordHash: await hashPassword(user.password),
+          avatarUrl: user.avatarUrl
+        }
+      })
+    }
+    print.info('Users inserted successfully')
+
     for (const videoData of videos) {
-      await prisma.videos.upsert({
+      await usePrisma.videos.upsert({
         where: { id: videoData.id },
         update: {},
         create: {
@@ -14,7 +37,8 @@ const main = async (videos: Video[]): Promise<void> => {
           title: videoData.title,
           description: videoData.description,
           url: videoData.url,
-          isPublic: videoData.isPublic
+          isPublic: videoData.isPublic,
+          usersId: videoData.usersId
         }
       })
     }
@@ -26,12 +50,12 @@ const main = async (videos: Video[]): Promise<void> => {
   }
 }
 
-main(videos)
+initializeDB({ videos, users })
   .then(async () => {
-    await prisma.$disconnect()
+    await usePrisma.$disconnect()
   })
   .catch(async (e) => {
     console.error(e)
-    await prisma.$disconnect()
+    await usePrisma.$disconnect()
     process.exit(1)
   })
