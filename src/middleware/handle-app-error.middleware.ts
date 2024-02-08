@@ -4,6 +4,8 @@ import { print } from '@config/logger'
 import ErrorKnow from '@utils/errorKnow'
 import { Prisma } from '@utils/prismaClient'
 import { getMsgByPrismaError } from '@utils/getMsgByPrismaError'
+import { JsonWebTokenError } from 'jsonwebtoken'
+import constants from '@App/constants'
 
 const handleValidationError = (error: ValidationError, res: Response): void => {
   print.error('Error validation schema: ' + error.message)
@@ -27,6 +29,11 @@ const handleErrorKnow = (error: ErrorKnow, res: Response): void => {
   res.status(400).json({ error: error.message })
 }
 
+const handleJWTError = (error: JsonWebTokenError, res: Response): void => {
+  print.error('Error jwt: ' + error.message)
+  res.status(401).json({ error: constants.ERROR_MESSAGE.UN_AUTHORIZED })
+}
+
 const handleDefaultError = (error: Error, res: Response): void => {
   print.error('Error unknow: ' + error.message)
   res.status(500).end()
@@ -39,6 +46,8 @@ const chooseHandler = (error: Error, res: Response): void => {
     handlePrismaError(error, res)
   } else if (error instanceof ErrorKnow) {
     handleErrorKnow(error, res)
+  } else if (error instanceof JsonWebTokenError) {
+    handleJWTError(error, res)
   } else {
     handleDefaultError(error, res)
   }

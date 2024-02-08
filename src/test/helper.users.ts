@@ -1,4 +1,4 @@
-import { type UserPayload, type UserDB } from '@my-types/*'
+import type { UserPayload, UserDB, SignInPayload } from '@my-types/*'
 import { usePrisma } from '@utils/prismaClient'
 
 export const getUsers = async (): Promise<UserDB[]> => {
@@ -6,15 +6,13 @@ export const getUsers = async (): Promise<UserDB[]> => {
 }
 
 export const newUser: UserPayload = {
-  username: 'maria123',
-  email: 'maria123@gmail.com',
-  password: 'root123',
-  avatarUrl: 'https://nobita.me/data.com'
+  username: 'luchoootest',
+  email: 'luchoootest@gmail.com',
+  password: '12345678',
+  avatarUrl: 'https://gravatar.com/avatar/72220e77f27bfab25cab6629b3b006bf'
 }
 
-export const initialUser = {
-  username: 'luchooo123',
-  email: 'luchooo123@gmail.com',
-  passwordHash: '',
-  avatarUrl: 'https://nobita.me/data/resource_icons/0/86.jpg'
+export const userDB: SignInPayload = {
+  email: 'luchooo@gmail.com',
+  password: 'luchooo123'
 }

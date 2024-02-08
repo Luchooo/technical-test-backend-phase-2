@@ -1,8 +1,9 @@
 import request from 'supertest'
 import { app, server } from '../server-with-postgres'
 import { usePrisma } from '@utils/prismaClient'
-import { hashPassword } from '@utils/hashPassword'
-import { getUsers, newUser, initialUser } from './helper.users'
+import { getUsers, userDB, newUser } from './helper.users'
+import { createUsers } from '@App/prisma/db/helper.seed'
+import { usersMock } from '@App/prisma/db/users.mock'
 
 afterAll(async () => {
   server.close()
@@ -10,19 +11,51 @@ afterAll(async () => {
 })
 
 beforeEach(async () => {
+  await usePrisma.videos.deleteMany({})
   await usePrisma.users.deleteMany({})
-  const passwordHash = await hashPassword('root')
-  initialUser.passwordHash = passwordHash
-  await usePrisma.users.create({
-    data: initialUser
+  await createUsers(usersMock, true)
+})
+
+describe('POST /api/users/sign-in', () => {
+  it('sign-in user', async () => {
+    await request(app)
+      .post('/api/users/sign-in')
+      .send(userDB)
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(200)
+  })
+
+  it('sign-in user missing email and password', async () => {
+    await request(app)
+      .post('/api/users/sign-in')
+      .send({})
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.error).toMatch(/\"email\" is required/i)
+      })
+  })
+
+  it('sign-in user with password smaller than 8 digits', async () => {
+    await request(app)
+      .post('/api/users/sign-in')
+      .send({ ...userDB, password: '123' })
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.error).toMatch(/\"password\" length must be/i)
+      })
   })
 })
 
-describe('POST /api/users', () => {
+describe('POST /api/users/sign-up', () => {
   it('create a new user', async () => {
     const usersDBStart = await getUsers()
     await request(app)
-      .post('/api/users')
+      .post('/api/users/sign-up')
       .send(newUser)
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
@@ -35,20 +68,19 @@ describe('POST /api/users', () => {
   })
 
   it('create a user already taken', async () => {
-    const newUser = {
-      username: 'luchooo1234',
-      email: 'luchooo123@gmail.com',
-      password: 'root123',
-      avatarUrl: 'https://nobita.me/data.com'
-    }
     await request(app)
-      .post('/api/users')
-      .send(newUser)
+      .post('/api/users/sign-up')
+      .send({
+        ...userDB,
+        username: 'myuser',
+        password: 'root1234',
+        avatarUrl: 'http://example.com'
+      })
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
       .expect(400)
       .then((response) => {
-        expect(response.body.error).toMatch(/email or username already taken/i)
+        expect(response.body.error).toMatch(/already taken/i)
       })
   })
 })

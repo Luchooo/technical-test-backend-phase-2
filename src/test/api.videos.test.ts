@@ -9,9 +9,9 @@ import {
   getVideoByUserId
 } from './helper.videos'
 import type { Video } from '@my-types/*'
-import { initializeDB } from '@App/prisma/db/seed'
 import { usersMock } from '@App/prisma/db/users.mock'
 import { videosMock } from '@App/prisma/db/videos.mock'
+import { createUsers, createVideos } from '@App/prisma/db/helper.seed'
 
 afterAll(async () => {
   server.close()
@@ -21,7 +21,8 @@ afterAll(async () => {
 beforeEach(async () => {
   await usePrisma.videos.deleteMany({})
   await usePrisma.users.deleteMany({})
-  await initializeDB({ usersMock, videosMock })
+  await createUsers(usersMock, false)
+  await createVideos(videosMock, false)
 })
 
 describe('GET /api/videos/public', () => {

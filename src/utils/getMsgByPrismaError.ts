@@ -20,12 +20,13 @@ export const getMsgByPrismaError = (
   }
   // Record to update not found
   else if (e.code === 'P2025') {
-    if (e.meta !== undefined && e.meta.cause !== undefined) {
-      return 'Video not found'
-    }
+    return 'Video not found'
+  }
+  // UUID invalid
+  else if (e.code === 'P2023') {
+    return 'Video id not valid'
   }
 
-  print.error(e)
   print.error('Uncaught msg from Prisma Client ' + e.message)
   return e.message
 }

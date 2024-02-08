@@ -4,11 +4,11 @@ GET http://localhost:3000/api/videos/public
 ### Get videos registered user 
 GET http://localhost:3000/api/videos
 Content-Type: application/json
-Authorization: Bearer 123
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU0YThmYWJkLWNkNWMtNGVhMS05ZWNmLWExMjM4MGY4MDc0MCIsInVzZXJuYW1lIjoibHVjaG9vbyIsImlhdCI6MTcwNzM0MjMxNH0.tvLxH9U4nAnvT_-8-ySbsKslno7LaGFKHRLRwjI6ufA
 
 ### Get video by id
 GET http://localhost:3000/api/videos/879916e3-76f2-438f-b987-8a7bcae45963
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU0YThmYWJkLWNkNWMtNGVhMS05ZWNmLWExMjM4MGY4MDc0MCIsInVzZXJuYW1lIjoibHVjaG9vbyIsImlhdCI6MTcwNzM0MjMxNH0.tvLxH9U4nAnvT_-8-ySbsKslno7LaGFKHRLRwjI6ufA
 
 ### Create a new video
 POST http://localhost:3000/api/videos
@@ -23,12 +23,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU0YThmYWJkL
 }
 
 ### Delete a video
-DELETE http://localhost:3000/api/videos/6331baf1-b7b9-44da-9e2b-6e5e26527e54
+DELETE http://localhost:3000/api/videos/40e12486-88da-450f-8e81-7beb1d63715a
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU0YThmYWJkLWNkNWMtNGVhMS05ZWNmLWExMjM4MGY4MDc0MCIsInVzZXJuYW1lIjoibHVjaG9vbyIsImlhdCI6MTcwNzM0MjMxNH0.tvLxH9U4nAnvT_-8-ySbsKslno7LaGFKHRLRwjI6ufA
 
 
 ### Update a video
 PUT http://localhost:3000/api/videos/879916e3-76f2-438f-b987-8a7bcae45963
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU0YThmYWJkLWNkNWMtNGVhMS05ZWNmLWExMjM4MGY4MDc0MCIsInVzZXJuYW1lIjoibHVjaG9vbyIsImlhdCI6MTcwNzM0MjMxNH0.tvLxH9U4nAnvT_-8-ySbsKslno7LaGFKHRLRwjI6ufA
 
 {
   "title": "Lola 🍍",
