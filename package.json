@@ -4,7 +4,6 @@
   "description": "Setup to NodeJs projects",
   "main": "build/server-with-postgres.js",
   "scripts": {
-    "postinstall": "prisma generate --schema ./src/prisma/db/schema.prisma",
     "vercel-build": "npm run build",
     "dev:postgres": "dotenv -e .env.dev -- tsx --watch --no-warnings src/server-with-postgres.ts",
     "start:postgres": "dotenv -e .env.dev -- node build/server-with-postgres.js",
