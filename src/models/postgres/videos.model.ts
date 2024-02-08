@@ -5,9 +5,18 @@ import { usePrisma } from '@utils/prismaClient'
 
 export const videoModel: VideoModel = {
   getAllPublic: async () => {
+    // Todo: Include Users inside the type
     const videos = await usePrisma.videos.findMany({
       where: {
         isPublic: true
+      },
+      include: {
+        Users: {
+          select: {
+            username: true,
+            avatarUrl: true
+          }
+        }
       }
     })
     return videos
