@@ -1,4 +1,6 @@
+import constants from '@App/constants'
 import type { VideoModel } from '@my-types/'
+import ErrorKnow from '@utils/errorKnow'
 import { usePrisma } from '@utils/prismaClient'
 
 export const videoModel: VideoModel = {
@@ -23,7 +25,8 @@ export const videoModel: VideoModel = {
       }
     })
 
-    if (video === null) throw new Error('Video not found')
+    if (video === null)
+      throw new ErrorKnow(constants.ERROR_MESSAGE.VIDEO_NOT_FOUND)
     return video
   },
 
@@ -34,10 +37,11 @@ export const videoModel: VideoModel = {
     return newVideo
   },
 
-  delete: async ({ id }) => {
+  delete: async ({ id, userId }) => {
     await usePrisma.videos.delete({
       where: {
-        id
+        id,
+        usersId: userId
       }
     })
   },

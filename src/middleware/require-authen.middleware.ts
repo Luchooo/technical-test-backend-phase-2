@@ -12,7 +12,7 @@ export const requireAuthen = (
 
   if (auth === undefined) {
     return res.status(401).json({
-      message: constants.ERROR_MESSAGE.UN_AUTHORIZED
+      error: constants.ERROR_MESSAGE.UN_AUTHORIZED
     })
   }
 
@@ -23,12 +23,12 @@ export const requireAuthen = (
 
   if (constants.TOKEN_SETTING.SECRET === undefined) {
     return res.status(500).json({
-      message: constants.ERROR_MESSAGE.JWT_SECRET_MISSING
+      error: constants.ERROR_MESSAGE.JWT_SECRET_MISSING
     })
   }
   if (token === null) {
     return res.status(401).json({
-      message: constants.ERROR_MESSAGE.UN_AUTHORIZED
+      error: constants.ERROR_MESSAGE.UN_AUTHORIZED
     })
   }
   const { id } = jwt.verify(

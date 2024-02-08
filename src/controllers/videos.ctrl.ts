@@ -55,7 +55,8 @@ export const videoController = (videoModel: VideoModel): VideoController => {
     delete: async (req, res, next) => {
       try {
         const { id } = req.params
-        await videoModel.delete({ id })
+        const { id: userId } = req.user
+        await videoModel.delete({ id, userId })
         res.json({ message: 'Video deleted successfully' })
       } catch (e) {
         next(e)

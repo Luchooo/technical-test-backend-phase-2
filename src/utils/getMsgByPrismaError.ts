@@ -1,3 +1,5 @@
+// Visit the following link: https://www.prisma.io/docs/orm/reference/error-reference
+
 import type { Prisma } from '@prisma/client'
 import { print } from '@config/logger'
 
@@ -16,7 +18,14 @@ export const getMsgByPrismaError = (
         .join(' or ')
     }
   }
+  // Record to update not found
+  else if (e.code === 'P2025') {
+    if (e.meta !== undefined && e.meta.cause !== undefined) {
+      return 'Video not found'
+    }
+  }
 
+  print.error(e)
   print.error('Uncaught msg from Prisma Client ' + e.message)
   return e.message
 }

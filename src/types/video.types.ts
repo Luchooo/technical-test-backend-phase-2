@@ -34,20 +34,13 @@ export interface VideoController {
 export interface VideoModel {
   getAllPublic: () => Promise<Video[]>
   getAll: () => Promise<Video[]>
-  getById: ({ id }: { id: string }) => Promise<Video>
-  create: ({
-    payload,
-    userId
-  }: {
+  getById: (args: { id: string }) => Promise<Video>
+  create: (args: {
     payload: VideoCreatePayload
     userId: string
   }) => Promise<Video>
-  delete: ({ id }: { id: string }) => Promise<void>
-  update: ({
-    id,
-    userId,
-    payload
-  }: {
+  delete: (args: { id: string; userId: string }) => Promise<void>
+  update: (args: {
     id: string
     userId: string
     payload: VideoUpdatePayload

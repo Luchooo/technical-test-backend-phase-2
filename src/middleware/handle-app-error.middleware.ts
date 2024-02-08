@@ -8,7 +8,7 @@ import { getMsgByPrismaError } from '@utils/getMsgByPrismaError'
 const handleValidationError = (error: ValidationError, res: Response): void => {
   print.error('Error validation schema: ' + error.message)
   res.status(400).json({
-    message: error.message,
+    error: error.message,
     fields: error.details[0].path
   })
 }
