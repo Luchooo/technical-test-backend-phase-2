@@ -1,10 +1,19 @@
-### Create a new user
-POST http://localhost:3000/api/users
+### SignUp user
+POST http://localhost:3000/api/users/sign-up
 Content-Type: application/json
 
 {
-  "username": "luchooo",
-  "email": "luis@gmail.com",
+  "username": "luchoooqq",
+  "email": "luis@gmaiqql.com",
   "password": "12345678",
   "avatarUrl": "https://nobita.me/data/resource_icons/0/86.jpg"
+}
+
+### SignIn user
+POST http://localhost:3000/api/users/sign-in
+Content-Type: application/json
+
+{
+  "email": "luchooo@gmail.com",
+  "password": "luchooo123"
 }

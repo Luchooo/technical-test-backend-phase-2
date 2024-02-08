@@ -3,12 +3,12 @@
 import cors from 'cors'
 import express, { json } from 'express'
 import morgan from 'morgan'
-import { videosRouter, usersRouter, authRouter } from '@routes/index.routes'
+import { videosRouter, usersRouter } from '@routes/index.routes'
 import { handleAppError } from './middleware/handle-app-error.middleware'
 import { print } from '@config/logger'
 import type { Models } from '@my-types/'
 
-export const createApp = ({ authModel, userModel, videoModel }: Models) => {
+export const createApp = ({ userModel, videoModel }: Models) => {
   const app = express()
   app.use(cors())
   app.use(morgan('dev'))
@@ -17,7 +17,6 @@ export const createApp = ({ authModel, userModel, videoModel }: Models) => {
 
   app.use('/api/users/', usersRouter(userModel))
   app.use('/api/videos/', videosRouter(videoModel))
-  app.use('/api/auth/', authRouter(authModel))
 
   app.use('/*', function (_req, res) {
     res.status(404).send('Sorry cant find that!')

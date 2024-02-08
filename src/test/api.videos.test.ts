@@ -43,7 +43,7 @@ describe('GET /api/videos/public', () => {
 
 describe('POST /api/videos', () => {
   it('create a video responds with json', async () => {
-    const resSignIn = await request(app).post('/api/auth/').send(user)
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
     const { token } = resSignIn.body
 
     await request(app)
@@ -60,7 +60,7 @@ describe('POST /api/videos', () => {
   })
 
   it('failed to create a new video missing properties', async () => {
-    const resSignIn = await request(app).post('/api/auth/').send(user)
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
     const { token } = resSignIn.body
 
     const newVideo = {
@@ -81,7 +81,7 @@ describe('POST /api/videos', () => {
 
 describe('GET /api/videos', () => {
   it('get a videos for user registrate', async () => {
-    const resSignIn = await request(app).post('/api/auth/').send(user)
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
     const { token } = resSignIn.body
     const res = await request(app)
       .get('/api/videos')
@@ -103,7 +103,7 @@ describe('GET /api/videos', () => {
   })
 
   it('get a single video with id mistake', async () => {
-    const resSignIn = await request(app).post('/api/auth/').send(user)
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
     const { token } = resSignIn.body
 
     const id = randomUUID()
@@ -120,7 +120,7 @@ describe('GET /api/videos', () => {
 
 describe('PUT /api/videos', () => {
   it('update a own video', async () => {
-    const resSignIn = await request(app).post('/api/auth/').send(user)
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
     const { token, id: userId } = resSignIn.body
     const video = getVideoByUserId(userId, videosMock)
 
@@ -147,7 +147,7 @@ describe('PUT /api/videos', () => {
   })
 
   it('update a video with random id', async () => {
-    const resSignIn = await request(app).post('/api/auth/').send(user)
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
     const { token } = resSignIn.body
 
     const id = randomUUID()
@@ -166,7 +166,7 @@ describe('PUT /api/videos', () => {
 
 describe('DELETE /api/videos', () => {
   it('delete a own video', async () => {
-    const resSignIn = await request(app).post('/api/auth/').send(user)
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
     const { token, id: userId } = resSignIn.body
     const video = getVideoByUserId(userId, videosMock)
 
@@ -187,7 +187,7 @@ describe('DELETE /api/videos', () => {
   })
 
   it('delete a video with random id', async () => {
-    const resSignIn = await request(app).post('/api/auth/').send(user)
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
     const { token } = resSignIn.body
 
     const id = randomUUID()
