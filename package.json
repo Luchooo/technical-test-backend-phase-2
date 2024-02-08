@@ -29,9 +29,6 @@
     "url": "https://github.com/Luchooo/technical-test-backend-phase-2/issues"
   },
   "homepage": "https://github.com/Luchooo/technical-test-backend-phase-2#readme",
-  "engines": {
-    "node": "20.11.0"
-  },
   "devDependencies": {
     "@babel/cli": "^7.23.9",
     "@babel/core": "^7.23.9",
