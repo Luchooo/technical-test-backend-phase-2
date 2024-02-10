@@ -8,7 +8,7 @@ import {
   newVideo,
   getVideoByUserId
 } from './helper.videos'
-import type { Video } from '@my-types/*'
+import type { Video, VideoPrisma } from '@my-types/*'
 import { usersMock } from '@App/prisma/db/users.mock'
 import { videosMock } from '@App/prisma/db/videos.mock'
 import { createUsers, createVideos } from '@App/prisma/db/helper.seed'
@@ -33,6 +33,26 @@ describe('GET /api/videos/public', () => {
       .expect(200)
 
     expect(res.body).toHaveLength(getPublicVideos(videosMock).length)
+  })
+
+  it('Each object should have only the expected properties public videos', async () => {
+    const res = await request(app)
+      .get('/api/videos/public')
+      .expect('Content-Type', /json/)
+      .expect(200)
+
+    res.body.forEach((video: VideoPrisma) => {
+      expect(video).toHaveProperty('Users')
+      expect(video.Users).toHaveProperty('avatarUrl')
+      expect(video.Users).toHaveProperty('username')
+      expect(video).toHaveProperty('createdAt')
+      expect(video).toHaveProperty('description')
+      expect(video).toHaveProperty('id')
+      expect(video).toHaveProperty('isPublic')
+      expect(video).toHaveProperty('title')
+      expect(video).toHaveProperty('url')
+      expect(video).toHaveProperty('usersId')
+    })
   })
 
   it('find video about cat Video Maria', async () => {
@@ -91,6 +111,29 @@ describe('GET /api/videos', () => {
       .expect(200)
 
     expect(res.body).toHaveLength(videosMock.length)
+  })
+
+  it('Each object should have only the expected properties videos', async () => {
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
+    const { token } = resSignIn.body
+    const res = await request(app)
+      .get('/api/videos')
+      .set('Authorization', `Bearer ${token}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+
+    res.body.forEach((video: VideoPrisma) => {
+      expect(video).toHaveProperty('Users')
+      expect(video.Users).toHaveProperty('avatarUrl')
+      expect(video.Users).toHaveProperty('username')
+      expect(video).toHaveProperty('createdAt')
+      expect(video).toHaveProperty('description')
+      expect(video).toHaveProperty('id')
+      expect(video).toHaveProperty('isPublic')
+      expect(video).toHaveProperty('title')
+      expect(video).toHaveProperty('url')
+      expect(video).toHaveProperty('usersId')
+    })
   })
 
   it('get a videos for user registrate without token', async () => {

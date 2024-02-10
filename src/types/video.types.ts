@@ -10,6 +10,13 @@ export interface Video {
   usersId: string
 }
 
+export interface VideoPrisma extends Video {
+  Users: {
+    username: string
+    avatarUrl: string
+  }
+}
+
 export interface VideoCreatePayload
   extends Omit<Video, 'id' | 'createdAt' | 'usersId'> {}
 
@@ -32,8 +39,8 @@ export interface VideoController {
 }
 
 export interface VideoModel {
-  getAllPublic: () => Promise<Video[]>
-  getAll: () => Promise<Video[]>
+  getAllPublic: () => Promise<VideoPrisma[]>
+  getAll: () => Promise<VideoPrisma[]>
   getById: (args: { id: string }) => Promise<Video>
   create: (args: {
     payload: VideoCreatePayload

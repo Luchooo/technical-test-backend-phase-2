@@ -23,7 +23,16 @@ export const videoModel: VideoModel = {
   },
 
   getAll: async () => {
-    const videos = await usePrisma.videos.findMany()
+    const videos = await usePrisma.videos.findMany({
+      include: {
+        Users: {
+          select: {
+            username: true,
+            avatarUrl: true
+          }
+        }
+      }
+    })
     return videos
   },
 
