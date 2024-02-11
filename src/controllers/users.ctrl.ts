@@ -2,7 +2,7 @@ import type {
   UserModel,
   UserController,
   UserPayload,
-  LoggedIn,
+  ResponseUser,
   SignInPayload
 } from '@my-types/*'
 import { schemaUser } from '@schemas/user'
@@ -12,15 +12,11 @@ import { schemaSignIn } from '@schemas/sign-in'
 import ErrorKnow from '@utils/errorKnow'
 import constants from '@App/constants/index'
 
-const getToken = async (loggedIn: LoggedIn): Promise<string> => {
-  const userForToken = {
-    id: loggedIn.id,
-    username: loggedIn.username
-  }
+const getToken = async (responseUser: ResponseUser): Promise<string> => {
   const jwtSecret = constants.TOKEN_SETTING.SECRET
   if (jwtSecret === undefined)
     throw new ErrorKnow(constants.ERROR_MESSAGE.JWT_SECRET_MISSING)
-  return jwt.sign(userForToken, jwtSecret)
+  return jwt.sign(responseUser, jwtSecret)
 }
 
 export const userController = (userModel: UserModel): UserController => {
@@ -30,7 +26,8 @@ export const userController = (userModel: UserModel): UserController => {
         const schema = schemaUser
         const payload = await validatePayload<UserPayload>(schema, req.body)
         const newUser = await userModel.create({ payload })
-        res.status(201).json(newUser)
+        const token = await getToken(newUser)
+        res.status(201).json({ ...newUser, token })
       } catch (e) {
         next(e)
       }

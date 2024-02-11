@@ -1,4 +1,9 @@
-import type { UserPayload, UserDB, SignInPayload } from '@my-types/*'
+import type {
+  UserPayload,
+  UserDB,
+  SignInPayload,
+  ResponseUserTkn
+} from '@my-types/*'
 import { usePrisma } from '@utils/prismaClient'
 
 export const getUsers = async (): Promise<UserDB[]> => {
@@ -15,4 +20,28 @@ export const newUser: UserPayload = {
 export const userDB: SignInPayload = {
   email: 'luchooo@gmail.com',
   password: 'luchooo123'
+}
+
+export const allowedProperties = [
+  'id',
+  'username',
+  'email',
+  'token',
+  'avatarUrl'
+]
+
+export const validateRes = (
+  body: ResponseUserTkn
+): { totalProps: string[]; extraProps: string[] } => {
+  const extraProps: string[] = []
+  const totalProps: string[] = []
+  Object.keys(body).forEach((key) => {
+    if (allowedProperties.includes(key)) {
+      totalProps.push(key)
+    } else {
+      extraProps.push(key)
+    }
+  })
+
+  return { totalProps, extraProps }
 }

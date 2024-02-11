@@ -10,14 +10,14 @@ export interface User {
 
 export type UserPayload = Omit<User, 'id'>
 
-export type UserCreated = Omit<User, 'password'>
-export interface UserDB extends UserCreated {
-  passwordHash: string
+export type ResponseUser = Omit<User, 'password'>
+
+export interface ResponseUserTkn extends ResponseUser {
+  token: string
 }
 
-export interface LoggedIn {
-  id: string
-  username: string
+export interface UserDB extends ResponseUser {
+  passwordHash: string
 }
 
 export interface SignInPayload {
@@ -26,8 +26,8 @@ export interface SignInPayload {
 }
 
 export interface UserModel {
-  create: (args: { payload: UserPayload }) => Promise<UserCreated>
-  signIn: (args: { payload: SignInPayload }) => Promise<LoggedIn>
+  create: (args: { payload: UserPayload }) => Promise<ResponseUser>
+  signIn: (args: { payload: SignInPayload }) => Promise<ResponseUser>
 }
 
 export interface UserController {

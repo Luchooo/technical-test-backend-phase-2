@@ -1,7 +1,13 @@
 import request from 'supertest'
 import { app, server } from '../server-with-postgres'
 import { usePrisma } from '@utils/prismaClient'
-import { getUsers, userDB, newUser } from './helper.users'
+import {
+  getUsers,
+  userDB,
+  newUser,
+  validateRes,
+  allowedProperties
+} from './helper.users'
 import { createUsers } from '@App/prisma/db/helper.seed'
 import { usersMock } from '@App/prisma/db/users.mock'
 
@@ -24,6 +30,18 @@ describe('POST /api/users/sign-in', () => {
       .set('Content-Type', 'application/json')
       .expect('Content-Type', /json/)
       .expect(200)
+  })
+
+  it('validate props to sign-in user response api', async () => {
+    const res = await request(app)
+      .post('/api/users/sign-in')
+      .send(userDB)
+      .expect('Content-Type', /json/)
+      .expect(200)
+
+    const { totalProps, extraProps } = validateRes(res.body)
+    expect(totalProps).toHaveLength(allowedProperties.length)
+    expect(extraProps).toHaveLength(0)
   })
 
   it('sign-in user missing email and password', async () => {
@@ -65,6 +83,19 @@ describe('POST /api/users/sign-up', () => {
     expect(usersDBAfter).toHaveLength(usersDBStart.length + 1)
     const usernames = usersDBAfter.map((user) => user.username)
     expect(usernames).toContain(newUser.username)
+  })
+
+  it('validate response to sign-up user', async () => {
+    const res = await request(app)
+      .post('/api/users/sign-up')
+      .send(newUser)
+      .set('Content-Type', 'application/json')
+      .expect('Content-Type', /json/)
+      .expect(201)
+
+    const { totalProps, extraProps } = validateRes(res.body)
+    expect(totalProps).toHaveLength(allowedProperties.length)
+    expect(extraProps).toHaveLength(0)
   })
 
   it('create a user already taken', async () => {

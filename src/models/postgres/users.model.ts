@@ -1,11 +1,11 @@
 import { usePrisma } from '@utils/prismaClient'
-import type { UserCreated, UserModel } from '@my-types/'
+import type { ResponseUser, UserModel } from '@my-types/'
 import { hashPassword } from '@utils/hashPassword'
 import ErrorKnow from '@utils/errorKnow'
 import bcrypt from 'bcrypt'
 import constants from '@App/constants'
 
-const getUserById = async (id: string): Promise<UserCreated> => {
+const getUserById = async (id: string): Promise<ResponseUser> => {
   const userCreated = await usePrisma.users.findUnique({
     where: { id },
     select: {
@@ -40,8 +40,7 @@ export const userModel: UserModel = {
     const { password, email: emailInput } = payload
 
     const user = await usePrisma.users.findUnique({
-      where: { email: emailInput },
-      select: { id: true, username: true, passwordHash: true }
+      where: { email: emailInput }
     })
 
     if (user === null) {
@@ -53,7 +52,7 @@ export const userModel: UserModel = {
       throw new ErrorKnow(constants.ERROR_MESSAGE.INVALID_EMAIL_PASSWORD)
     }
 
-    const { id, username } = user
-    return { id, username }
+    const { id, username, email, avatarUrl } = user
+    return { id, username, email, avatarUrl }
   }
 }
