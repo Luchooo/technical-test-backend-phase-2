@@ -6,6 +6,12 @@ GET http://localhost:3000/api/videos
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU0YThmYWJkLWNkNWMtNGVhMS05ZWNmLWExMjM4MGY4MDc0MCIsInVzZXJuYW1lIjoibHVjaG9vbyIsImlhdCI6MTcwNzM0MjMxNH0.tvLxH9U4nAnvT_-8-ySbsKslno7LaGFKHRLRwjI6ufA
 
+### Get videos by userId 
+GET http://localhost:3000/api/videos?userId=e4a8fabd-cd5c-4ea1-9ecf-a12380f80740
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU0YThmYWJkLWNkNWMtNGVhMS05ZWNmLWExMjM4MGY4MDc0MCIsInVzZXJuYW1lIjoibHVjaG9vbyIsImlhdCI6MTcwNzM0MjMxNH0.tvLxH9U4nAnvT_-8-ySbsKslno7LaGFKHRLRwjI6ufA
+
+
 ### Get video by id
 GET http://localhost:3000/api/videos/879916e3-76f2-438f-b987-8a7bcae45963
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImU0YThmYWJkLWNkNWMtNGVhMS05ZWNmLWExMjM4MGY4MDc0MCIsInVzZXJuYW1lIjoibHVjaG9vbyIsImlhdCI6MTcwNzM0MjMxNH0.tvLxH9U4nAnvT_-8-ySbsKslno7LaGFKHRLRwjI6ufA

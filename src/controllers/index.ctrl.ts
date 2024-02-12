@@ -1,2 +1,2 @@
 export * from './users.ctrl'
-export * from './videos.ctrl'
+export * from './videos/videos.ctrl'

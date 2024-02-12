@@ -6,7 +6,8 @@ import {
   getPublicVideos,
   user,
   newVideo,
-  getVideoByUserId
+  getVideoByUserId,
+  getVideosByUserId
 } from './helper.videos'
 import type { Video, VideoPrisma } from '@my-types/*'
 import { usersMock } from '@App/prisma/db/users.mock'
@@ -243,6 +244,25 @@ describe('DELETE /api/videos', () => {
       .expect('Content-Type', /json/)
       .then((res) => {
         expect(res.body.error).toMatch(/video not found/i)
+      })
+  })
+})
+
+describe('GET /api/videos?userId=', () => {
+  it('get videos by userId', async () => {
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
+    const { token, id: userId } = resSignIn.body
+    const initDB = getVideosByUserId(userId, videosMock)
+
+    await request(app)
+      .get(`/api/videos?userId=${userId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then((res) => {
+        const videos = res.body.map((video: Video) => video.usersId)
+        expect(res.body).toHaveLength(initDB.length)
+        expect(videos).toContain(userId)
       })
   })
 })

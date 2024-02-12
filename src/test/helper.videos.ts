@@ -21,3 +21,7 @@ export const getVideoByUserId = (userId: string, videos: Video[]): Video => {
   if (video === undefined) throw new Error('Video not found')
   return video
 }
+
+export const getVideosByUserId = (userId: string, videos: Video[]): Video[] => {
+  return videos.filter((video) => video.usersId === userId)
+}

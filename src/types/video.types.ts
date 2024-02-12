@@ -32,6 +32,7 @@ export type RequestHandler = (
 export interface VideoController {
   getAllPublic: RequestHandler
   getAll: RequestHandler
+  getAllByUserId: RequestHandler
   getById: RequestHandler
   create: RequestHandler
   delete: RequestHandler
@@ -41,6 +42,7 @@ export interface VideoController {
 export interface VideoModel {
   getAllPublic: () => Promise<VideoPrisma[]>
   getAll: () => Promise<VideoPrisma[]>
+  getAllByUserId: (args: { userId: string }) => Promise<Video[]>
   getById: (args: { id: string }) => Promise<Video>
   create: (args: {
     payload: VideoCreatePayload

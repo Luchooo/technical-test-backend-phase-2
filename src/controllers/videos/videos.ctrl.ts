@@ -28,6 +28,16 @@ export const videoController = (videoModel: VideoModel): VideoController => {
       }
     },
 
+    getAllByUserId: async (req, res, next) => {
+      try {
+        const { id: userId } = req.user
+        const videos = await videoModel.getAllByUserId({ userId })
+        res.json(videos)
+      } catch (e) {
+        next(e)
+      }
+    },
+
     getById: async (req, res, next) => {
       try {
         const { id } = req.params
