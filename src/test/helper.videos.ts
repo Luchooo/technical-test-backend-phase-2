@@ -25,3 +25,7 @@ export const getVideoByUserId = (userId: string, videos: Video[]): Video => {
 export const getVideosByUserId = (userId: string, videos: Video[]): Video[] => {
   return videos.filter((video) => video.usersId === userId)
 }
+
+export const getVideoCreatedAt = (video: Video): number => {
+  return new Date(video.createdAt).getTime()
+}

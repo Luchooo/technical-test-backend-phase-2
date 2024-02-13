@@ -6,6 +6,9 @@ import { usePrisma } from '@utils/prismaClient'
 export const videoModel: VideoModel = {
   getAllPublic: async () => {
     const videos = await usePrisma.videos.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      },
       where: {
         isPublic: true
       },
@@ -23,6 +26,9 @@ export const videoModel: VideoModel = {
 
   getAll: async () => {
     const videos = await usePrisma.videos.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      },
       include: {
         Users: {
           select: {
@@ -37,6 +43,9 @@ export const videoModel: VideoModel = {
 
   getAllByUserId: async ({ userId }) => {
     const videos = await usePrisma.videos.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      },
       where: {
         usersId: userId
       }

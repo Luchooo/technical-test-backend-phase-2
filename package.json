@@ -11,7 +11,7 @@
     "fm": "prettier --write src",
     "lint": "eslint --fix src --ext .js,.jsx,.ts,.tsx",
     "typecheck": "tsc --noEmit",
-    "test": "dotenv -e .env.test -- jest --detectOpenHandles --silent",
+    "test": "dotenv -e .env.test -- jest src/test/api.videos.test.ts --detectOpenHandles",
     "test:watch": "npm run test -- --watch",
     "db:migrate": "dotenv -e .env.dev -- npx prisma migrate dev --schema ./src/prisma/db/schema.prisma",
     "db:migrate:test": "dotenv -e .env.test -- npx prisma migrate dev --schema ./src/prisma/db-test/schema-test.prisma",

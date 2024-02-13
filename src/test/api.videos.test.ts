@@ -7,7 +7,8 @@ import {
   user,
   newVideo,
   getVideoByUserId,
-  getVideosByUserId
+  getVideosByUserId,
+  getVideoCreatedAt
 } from './helper.videos'
 import type { Video, VideoPrisma } from '@my-types/*'
 import { usersMock } from '@App/prisma/db/users.mock'
@@ -60,6 +61,21 @@ describe('GET /api/videos/public', () => {
     const res = await request(app).get('/api/videos/public')
     const videos = res.body.map((video: Video) => video.title)
     expect(videos).toContain('Dog video maria public')
+  })
+
+  it('responds videos order by createdAt desc', async () => {
+    await request(app)
+      .get('/api/videos/public')
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then((res) => {
+        expect(Array.isArray(res.body)).toBe(true)
+        for (let i = 0; i < res.body.length - 1; i++) {
+          const currentVideo = getVideoCreatedAt(res.body[i])
+          const nextVideo = getVideoCreatedAt(res.body[i + 1])
+          expect(currentVideo).toBeGreaterThanOrEqual(nextVideo)
+        }
+      })
   })
 })
 
@@ -144,6 +160,24 @@ describe('GET /api/videos', () => {
       .expect(401)
       .then((res) => {
         expect(res.body.error).toMatch(/please sign in to continue/i)
+      })
+  })
+
+  it('users registrated responds videos order by createdAt desc', async () => {
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
+    const { token } = resSignIn.body
+    await request(app)
+      .get('/api/videos')
+      .set('Authorization', `Bearer ${token}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then((res) => {
+        expect(Array.isArray(res.body)).toBe(true)
+        for (let i = 0; i < res.body.length - 1; i++) {
+          const currentVideo = getVideoCreatedAt(res.body[i])
+          const nextVideo = getVideoCreatedAt(res.body[i + 1])
+          expect(currentVideo).toBeGreaterThanOrEqual(nextVideo)
+        }
       })
   })
 
@@ -263,6 +297,25 @@ describe('GET /api/videos?userId=', () => {
         const videos = res.body.map((video: Video) => video.usersId)
         expect(res.body).toHaveLength(initDB.length)
         expect(videos).toContain(userId)
+      })
+  })
+
+  it('Query Params: get videos by userId', async () => {
+    const resSignIn = await request(app).post('/api/users/sign-in').send(user)
+    const { token, id: userId } = resSignIn.body
+
+    await request(app)
+      .get(`/api/videos?userId=${userId}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .then((res) => {
+        expect(Array.isArray(res.body)).toBe(true)
+        for (let i = 0; i < res.body.length - 1; i++) {
+          const currentVideo = getVideoCreatedAt(res.body[i])
+          const nextVideo = getVideoCreatedAt(res.body[i + 1])
+          expect(currentVideo).toBeGreaterThanOrEqual(nextVideo)
+        }
       })
   })
 })

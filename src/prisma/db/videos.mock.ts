@@ -5,7 +5,7 @@ export const videosMock: Video[] = [
     title: 'Cat Video',
     description: 'Cat Video Private',
     url: 'https://www.youtube.com/shorts/Po098TRdOn4',
-    createdAt: new Date(),
+    createdAt: new Date('2024-02-13T06:01:40.112Z'),
     isPublic: false,
     usersId: 'e4a8fabd-cd5c-4ea1-9ecf-a12380f80740'
   },
@@ -14,7 +14,7 @@ export const videosMock: Video[] = [
     title: 'Dog Video',
     description: 'Dog Video Public',
     url: 'https://www.youtube.com/shorts/IN0T1kyvGi4',
-    createdAt: new Date(),
+    createdAt: new Date('2024-02-13T05:01:40.112Z'),
     isPublic: true,
     usersId: 'e4a8fabd-cd5c-4ea1-9ecf-a12380f80740'
   },
@@ -23,7 +23,7 @@ export const videosMock: Video[] = [
     title: 'Cat Video Maria',
     description: 'Cat Video Private Maria',
     url: 'https://www.youtube.com/shorts/TAo_CHchVnM',
-    createdAt: new Date(),
+    createdAt: new Date('2024-02-13T04:01:40.112Z'),
     isPublic: false,
     usersId: 'df0cc617-9c56-4132-a6ea-38db2b72b19d'
   },
@@ -32,7 +32,7 @@ export const videosMock: Video[] = [
     title: 'Dog video maria public',
     description: 'Dog video public owner maria',
     url: 'https://www.youtube.com/shorts/BYESIhhrWSY',
-    createdAt: new Date(),
+    createdAt: new Date('2024-02-13T03:01:40.112Z'),
     isPublic: true,
     usersId: 'df0cc617-9c56-4132-a6ea-38db2b72b19d'
   }
